@@ -1,0 +1,24 @@
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "firstName": "hen maina",
+  "lastName": "kassy",
+  "contactPhone": "0758658199",
+  "email": "hen@gmail.com",
+  "password": "12345",
+  "address": "123 mailRoad",
+  "role": "user"
+}
+###
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "kassy@gmail.com",
+  "password": "12345"
+  
+}
+###
+GET http://localhost:5000/api/users*
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoia2Fzc3lAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiZmlyc3ROYW1lIjoic3RhbmN5IiwibGFzdE5hbWUiOiJrYXNzeSIsImV4cCI6MTc1MTI4MjEzNCwiaWF0IjoxNzUxMjc4NTM0fQ.eKFP9yZ1If45HGtBBvTPY2pnQ4-nWVZvLBDBo_lcafQ
