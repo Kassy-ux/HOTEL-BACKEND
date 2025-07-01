@@ -22,3 +22,99 @@ Content-Type: application/json
 ###
 GET http://localhost:5000/api/users*
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoia2Fzc3lAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiZmlyc3ROYW1lIjoic3RhbmN5IiwibGFzdE5hbWUiOiJrYXNzeSIsImV4cCI6MTc1MTI4MjEzNCwiaWF0IjoxNzUxMjc4NTM0fQ.eKFP9yZ1If45HGtBBvTPY2pnQ4-nWVZvLBDBo_lcafQ
+
+###
+GET   http://localhost:5000/api/hotels
+
+###
+POST http://localhost:5000/api/hotel
+Content-Type: application/json
+
+{
+  "name": "Test Hotel",
+  "location": "Test Location",
+  "address": "123 Test St",
+  "contactPhone": "0712345678",
+  "category": "Standard",
+  "rating": 3.5
+}
+
+
+### Room API Testing Endpoints
+
+# 1. CREATE A NEW ROOM
+POST http://localhost:5000/api/room
+Content-Type: application/json
+
+{
+  "hotelId": 2,
+  "roomType": "Deluxe Single",
+  "pricePerNight": 150.00,
+  "capacity": 1,
+  "amenities": "WiFi, Air Conditioning, TV, Mini Bar",
+  "isAvailable": true
+}
+
+###
+
+# 2. CREATE ANOTHER ROOM
+POST http://localhost:5000/api/room
+Content-Type: application/json
+
+{
+  "hotelId": 2,
+  "roomType": "Standard Double",
+  "pricePerNight": 200.50,
+  "capacity": 2,
+  "amenities": "WiFi, Air Conditioning, TV, Balcony",
+  "isAvailable": true
+}
+
+###
+
+# 3. CREATE A LUXURY SUITE
+POST http://localhost:5000/api/room
+Content-Type: application/json
+
+{
+  "hotelId": 3,
+  "roomType": "Presidential Suite",
+  "pricePerNight": 800.00,
+  "capacity": 4,
+  "amenities": "WiFi, Air Conditioning, TV, Mini Bar, Jacuzzi, Butler Service, Ocean View",
+  "isAvailable": false
+}
+
+###
+
+GET http://localhost:5000/api/rooms
+
+###
+GET http://localhost:5000/api/room/3
+###
+GET http://localhost:5000/api/room/hotel/5
+
+###
+GET http://localhost:5000/api/rooms/available
+
+###
+
+# 8. UPDATE A ROOM 
+PUT http://localhost:5000/api/room/1
+Content-Type: application/json
+
+{
+  "roomType": "Deluxe Single - Updated",
+  "pricePerNight": 175.00,
+  "capacity": 1,
+  "amenities": "WiFi, Air Conditioning, Smart TV, Mini Bar, Coffee Machine"
+}
+###
+
+# 9. UPDATE ROOM AVAILABILITY 
+PATCH http://localhost:5000/api/room/1/availability
+Content-Type: application/json
+
+{
+  "isAvailable": false
+}

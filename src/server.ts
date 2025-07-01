@@ -4,6 +4,8 @@ import { logger } from './middleware/logger';
 import { rateLimiterMiddleware } from './middleware/rateLimiter';
 import { authRouter } from './auth/auth.router';
 import { userRouter } from './users/user.router';
+import { hotelRouter } from './hotels/hotel.router';
+import roomRouter from './rooms/room.router';
 
 
 dotenv.config();
@@ -37,7 +39,8 @@ app.use(cors({
 
 app.use('/api', authRouter);
 app.use('/api',userRouter);
-
+app.use('/api',hotelRouter);
+app.use ('/api',roomRouter)
 const PORT = process.env.PORT || 5000;
 
 

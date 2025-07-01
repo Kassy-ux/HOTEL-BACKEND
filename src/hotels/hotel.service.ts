@@ -5,7 +5,12 @@ import { HotelInput, HotelUpdateInput, hotelSchema, hotelUpdateSchema } from "..
 
 // Get all hotels
 export const getAllHotelsService = async () => {
-  return await db.select().from(hotels);
+  return await db.query.hotels.findMany({
+    with:{
+      rooms:true
+  
+    }
+  } );
 };
 
 // Get a hotel by ID

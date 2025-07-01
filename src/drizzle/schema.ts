@@ -127,8 +127,22 @@ export const supportTicketsRelations = relations(supportTickets, ({ one }) => ({
   }),
 }));
 
+// Fixed type exports for your schema (replace the incorrect ones at the bottom)
+
 export type TUsersInsert = typeof users.$inferInsert;
 export type TUsersSelect = typeof users.$inferSelect;
 
-export type  THotelsInsert = typeof users.$inferInsert;
-export type THotelsSelect  = typeof users.$inferSelect;
+export type THotelsInsert = typeof hotels.$inferInsert;
+export type THotelsSelect = typeof hotels.$inferSelect;
+
+export type TRoomsInsert = typeof rooms.$inferInsert;
+export type TRoomsSelect = typeof rooms.$inferSelect;
+
+export type TBookingsInsert = typeof bookings.$inferInsert;
+export type TBookingsSelect = typeof bookings.$inferSelect;
+
+export type TPaymentsInsert = typeof payments.$inferInsert;
+export type TPaymentsSelect = typeof payments.$inferSelect;
+
+export type TSupportTicketsInsert = typeof supportTickets.$inferInsert;
+export type TSupportTicketsSelect = typeof supportTickets.$inferSelect;

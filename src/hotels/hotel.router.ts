@@ -7,12 +7,12 @@ import {
   deleteHotel,
 } from "./hotel.controller";
 
-const router = Router();
+ export const hotelRouter = Router();
 
-router.get("/", getAllHotels);
-router.get("/:id", getHotelById);
-router.post("/", createHotel);
-router.put("/:id", updateHotel);
-router.delete("/:id", deleteHotel);
+hotelRouter.get("/hotels", getAllHotels);
+hotelRouter.get("/hotel/:id", getHotelById);
+hotelRouter.post("/hotel", createHotel);
+hotelRouter.put("/hotel/:id", updateHotel);
+hotelRouter.delete("/hotel/:id", deleteHotel);
 
-export default router;
+
