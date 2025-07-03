@@ -47,3 +47,40 @@ export const deleteTicketService = async (id: number): Promise<string> => {
   await db.delete(supportTickets).where(eq(supportTickets.ticketId, id)).returning();
   return "Ticket deleted successfully";
 };
+export const getTicketsByStatusService = async (status: string) => {
+  if (status !== "Open" && status !== "Resolved") {
+    throw new Error("Invalid status. Must be 'Open' or 'Resolved'.");
+  }
+
+  return await db.query.supportTickets.findMany({
+    where: eq(supportTickets.status, status as "Open" | "Resolved"),
+    with: {
+      user: {
+        columns: {
+          firstName: true,
+          lastName: true,
+          email: true,
+          contactPhone: true,
+          address: true,
+          role: true
+        }
+      }
+    }
+  });
+};
+// Mark ticket as Resolved
+export const resolveTicketService = async (ticketId: number): Promise<string | null> => {
+  const ticket = await db.query.supportTickets.findFirst({
+    where: eq(supportTickets.ticketId, ticketId)
+  });
+
+  if (!ticket) return null;
+  if (ticket.status === "Resolved") return "ALREADY_RESOLVED";
+
+  await db
+    .update(supportTickets)
+    .set({ status: "Resolved" })
+    .where(eq(supportTickets.ticketId, ticketId));
+
+  return "Ticket marked as resolved 🎉";
+};

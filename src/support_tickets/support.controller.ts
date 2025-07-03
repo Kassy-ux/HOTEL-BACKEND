@@ -4,7 +4,9 @@ import {
   getTicketByIdService,
   createTicketService,
   updateTicketService,
-  deleteTicketService
+  deleteTicketService,
+  getTicketsByStatusService,
+  resolveTicketService
 } from './support.service';
 import { TSupportTicketsInsert } from '../drizzle/schema';
 
@@ -80,5 +82,60 @@ export const deleteTicket = async (req: Request, res: Response) => {
     res.json({ message: 'Ticket deleted successfully' });return
   } catch (error: any) {
     res.status(500).json({ error: error.message || 'Failed to delete ticket' });
+  }
+};
+export const getTicketsByStatus = async (req: Request, res: Response) => {
+  const status = req.params.status;
+
+  if (status !== "Open" && status !== "Resolved") {
+    res.status(400).json({
+      message: "Invalid status. Use either 'Open' or 'Resolved'."
+    });
+     return
+  }
+
+  try {
+    const tickets = await getTicketsByStatusService(status);
+    if (!tickets || tickets.length === 0) {
+       res.status(404).json({ message: `No '${status}' tickets found` });
+       return
+    }
+
+    res.status(200).json({
+      message: `Tickets with status '${status}' retrieved successfully ✅`,
+      tickets
+    });
+     return
+  } catch (error: any) {
+     res.status(500).json({ error: error.message || "Failed to filter tickets" });
+      return
+  }
+};
+export const resolveTicket = async (req: Request, res: Response) => {
+  const ticketId = parseInt(req.params.id);
+
+  if (isNaN(ticketId)) {
+     res.status(400).json({ message: "Invalid ticket ID" });
+     return;
+  }
+
+  try {
+    const result = await resolveTicketService(ticketId);
+
+    if (result === null) {
+       res.status(404).json({ message: "Ticket not found" });
+       return
+    }
+
+    if (result === "ALREADY_RESOLVED") {
+      res.status(409).json({ message: "Ticket is already resolved" });
+      return
+    }
+
+    res.status(200).json({ message: result });
+    return
+  } catch (error: any) {
+    res.status(500).json({ error: error.message || "Failed to resolve ticket" });
+    return
   }
 };

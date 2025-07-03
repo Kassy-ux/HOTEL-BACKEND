@@ -4,7 +4,9 @@ import {
   getTicketById,
   createTicket,
   updateTicket,
-  deleteTicket
+  deleteTicket,
+  getTicketsByStatus,
+  resolveTicket
 } from './support.controller';
 
 const supportRouter = Router();
@@ -14,5 +16,6 @@ supportRouter.get('/ticket/:id', getTicketById);
 supportRouter.post('/ticket', createTicket);
 supportRouter.put('/ticket/:id', updateTicket);
 supportRouter.delete('/ticket/:id', deleteTicket);
-
+supportRouter.get("/tickets/status/:status", getTicketsByStatus);
+supportRouter.patch("/tickets/:id/resolve", resolveTicket);   //Resolve Ticket
 export default supportRouter;

@@ -21,7 +21,7 @@ import {
 const roomRouter = Router();
 
 // GET routes
-roomRouter.get("/rooms",adminOnly, getAllRooms);                                    // GET /rooms
+roomRouter.get("/rooms", getAllRooms);                                    // GET /rooms
 roomRouter.get("/room/available", getAvailableRooms);                     // GET /rooms/available
 roomRouter.get("/room/active-bookings",adminOnly, getRoomsWithActiveBookings);      // GET /rooms/active-bookings
 roomRouter.get("/room/:hotel/:id", getRoomsByHotelId);                // GET /rooms/hotel/:hotelId

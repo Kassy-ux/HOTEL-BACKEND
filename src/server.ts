@@ -47,7 +47,7 @@ app.use('/api',hotelRouter);
 app.use ('/api',roomRouter);
 app.use ('/api',BookingRouter);
 app.use('/api',supportRouter);
-app.use("/api/payments", paymentRouter);
+app.use("/api", paymentRouter);
 
 const PORT = process.env.PORT || 5000;
 
