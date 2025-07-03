@@ -50,7 +50,7 @@ export const getRoomById = async (req: Request, res: Response): Promise<void> =>
 // GET /rooms/hotel/:hotelId - Get rooms by hotel ID
 export const getRoomsByHotelId = async (req: Request, res: Response): Promise<void> => {
   try {
-    const hotelId = parseInt(req.params.hotelId);
+    const hotelId = parseInt(req.params.id);
     if (isNaN(hotelId)) {
       res.status(400).json({ message: "Invalid hotel ID" });
       return;

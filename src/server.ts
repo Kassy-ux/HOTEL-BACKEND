@@ -6,6 +6,10 @@ import { authRouter } from './auth/auth.router';
 import { userRouter } from './users/user.router';
 import { hotelRouter } from './hotels/hotel.router';
 import roomRouter from './rooms/room.router';
+import BookingRouter from './bookings/booking.router';
+import supportRouter from './support_tickets/support.router';
+import paymentRouter from './payments/payment.router';
+
 
 
 dotenv.config();
@@ -40,7 +44,11 @@ app.use(cors({
 app.use('/api', authRouter);
 app.use('/api',userRouter);
 app.use('/api',hotelRouter);
-app.use ('/api',roomRouter)
+app.use ('/api',roomRouter);
+app.use ('/api',BookingRouter);
+app.use('/api',supportRouter);
+app.use("/api/payments", paymentRouter);
+
 const PORT = process.env.PORT || 5000;
 
 

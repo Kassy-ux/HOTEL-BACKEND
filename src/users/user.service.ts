@@ -5,7 +5,15 @@ import { UserSchema, PartialUserSchema, type UserInput, type PartialUserInput } 
 
 //  Get all users
 export const getUsersService = async (): Promise<TUsersSelect[]> => {
-  return await db.query.users.findMany();
+  return await db.query.users.findMany(
+    {
+      with: {
+        
+        bookings: true
+      }
+    }
+  );
+
 };
 
 //  Get user by ID

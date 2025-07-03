@@ -10,13 +10,18 @@ import { UserInput, PartialUserInput } from "../validation/user.validation";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    // req.user is available because of the auth middleware
-    const users = await getUsersService();
-    res.status(200).json(users);
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
+    const allUsers = await getUsersService();
+    if (allUsers == null || allUsers.length == 0) {
+      res.status(404).json({ message: "No users found" });
+    }else{
+ // Remove password from each user object before sending response
+        const usersWithoutPasswords = allUsers.map(({ password, ...user }) => user);
+        res.status(200).json(usersWithoutPasswords);
+                   
+    }            
+} catch (error:any) {
+    res.status(500).json({ error:error.message || "Failed to fetch users" });
+}
 };
 
 export const getUserById = async (req: Request, res: Response) => {
@@ -38,7 +43,11 @@ export const getUserById = async (req: Request, res: Response) => {
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return
-    }
+    }else {
+      // Remove password from each user object before sending response
+     const { password, ...userWithoutPassword } = user;
+       res.status(200).json(userWithoutPassword);
+   }
 
     res.status(200).json(user);
   } catch (error) {
