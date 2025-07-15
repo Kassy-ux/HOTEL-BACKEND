@@ -30,9 +30,11 @@ export const hotels = pgTable("hotels", {
   contactPhone: varchar("contact_phone", { length: 20 }),
   category: varchar("category", { length: 50 }),
   rating: decimal("rating", { precision: 2, scale: 1 }),
+  hotelImage: varchar("hotel_image", { length: 255 }), 
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
+
 
 // Rooms Table
 export const rooms = pgTable("rooms", {
@@ -42,6 +44,7 @@ export const rooms = pgTable("rooms", {
   pricePerNight: decimal("price_per_night", { precision: 10, scale: 2 }),
   capacity: integer("capacity"),
   amenities: text("amenities"),
+  roomImage: varchar("room_image", { length: 255 }), 
   isAvailable: boolean("is_available").default(true),
   createdAt: timestamp("created_at").defaultNow(),
 });

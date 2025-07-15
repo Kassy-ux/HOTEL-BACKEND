@@ -1,7 +1,7 @@
 import express, { Application,Response } from 'express';
 import dotenv from 'dotenv';
 import { logger } from './middleware/logger';
-import { rateLimiterMiddleware } from './middleware/rateLimiter';
+// import { rateLimiterMiddleware } from './middleware/rateLimiter';
 import { authRouter } from './auth/auth.router';
 import { userRouter } from './users/user.router';
 import { hotelRouter } from './hotels/hotel.router';
@@ -9,19 +9,21 @@ import roomRouter from './rooms/room.router';
 import BookingRouter from './bookings/booking.router';
 import supportRouter from './support_tickets/support.router';
 import paymentRouter from './payments/payment.router';
+import cors from 'cors';
 
 
 
 dotenv.config();
 
 const app: Application = express();
-const cors = require('cors');
+// const cors = require('cors');
 
 // Basic Middleware
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logger);
-app.use(rateLimiterMiddleware);
+// app.use(rateLimiterMiddleware);
 
 //default route
 app.get('/', (req, res:Response) => {
@@ -29,7 +31,6 @@ app.get('/', (req, res:Response) => {
 });
 
 // Enable CORS for all routes
-app.use(cors());
 
 // Or configure specific origins
 app.use(cors({

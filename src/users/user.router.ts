@@ -18,7 +18,7 @@ export const userRouter = Router();
 
 
 userRouter.get("/users",  getUsers);
-userRouter.get("/users/:id", anyAuthenticatedUser, getUserById );
+userRouter.get("/users/:id", getUserById );
 userRouter.post("/users", createUser);
 userRouter.put("/users/:id", anyAuthenticatedUser, updateUser);
 userRouter.delete("/users/:id", deleteUser);

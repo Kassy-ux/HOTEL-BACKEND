@@ -9,7 +9,8 @@ export const getUsersService = async (): Promise<TUsersSelect[]> => {
     {
       with: {
         
-        bookings: true
+        bookings: true,
+        
       }
     }
   );

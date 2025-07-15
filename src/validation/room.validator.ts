@@ -7,6 +7,7 @@ export const RoomInputSchema = z.object({
   pricePerNight: z.number().positive("Price per night must be positive").multipleOf(0.01, "Price must have at most 2 decimal places").optional(),
   capacity: z.number().int().positive("Capacity must be a positive integer").optional(),
   amenities: z.string().optional(),
+  roomImage: z.string().url().optional(), 
   isAvailable: z.boolean().default(true).optional(),
 });
 
@@ -17,6 +18,7 @@ export const UpdateRoomInputSchema = z.object({
   pricePerNight: z.number().positive("Price per night must be positive").multipleOf(0.01, "Price must have at most 2 decimal places").optional(),
   capacity: z.number().int().positive("Capacity must be a positive integer").optional(),
   amenities: z.string().optional(),
+  roomImage: z.string().url().optional(), 
   isAvailable: z.boolean().optional(),
 });
 

@@ -6,9 +6,12 @@ import {
   updateTicketService,
   deleteTicketService,
   getTicketsByStatusService,
-  resolveTicketService
+  resolveTicketService,
+  getTicketsByUserIdService,
+
 } from './support.service';
 import { TSupportTicketsInsert } from '../drizzle/schema';
+import { clearScreenDown } from 'readline';
 
 export const getAllTickets = async (req: Request, res: Response) => {
   try {
@@ -36,6 +39,28 @@ export const getTicketById = async (req: Request, res: Response) => {
     res.status(500).json({ error: error.message || 'Failed to retrieve ticket' });
   }
 };
+export const getTicketsByUserId = async (req: Request, res: Response) => {
+  try {
+    const userId = parseInt(req.params.userId, 10);
+    console.log(userId)
+    
+    if (isNaN(userId)) {
+      res.status(400).json({ message: 'Invalid user ID' }); return
+    }
+
+    const tickets = await getTicketsByUserIdService(userId);
+    
+    if (!tickets || tickets.length === 0) {
+      res.status(404).json({ message: 'No tickets found for this user' }); return
+    }
+
+    res.status(200).json(tickets); return
+  } catch (error) {
+    console.error('Error fetching tickets by user ID:', error);
+    res.status(500).json({ message: 'Internal server error' }); return
+  }
+};
+
 
 export const createTicket = async (req: Request, res: Response) => {
   try {

@@ -6,8 +6,10 @@ export const hotelSchema = z.object({
   address: z.string().optional(),
   contactPhone: z.string().optional(),
   category: z.string().optional(),
-  rating: z.number().optional()
+  rating: z.number().optional(),
+  hotelImage: z.string().url().optional(), 
 });
+
 
 export const hotelUpdateSchema = hotelSchema.partial();
 

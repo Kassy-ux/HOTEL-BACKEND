@@ -8,7 +8,7 @@ import { eq } from "drizzle-orm";
 dotenv.config();
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-06-30.basil", // updated to match the expected type
+  apiVersion: "2025-06-30.basil", // Use the latest stable version
 });
 
 export const createStripePaymentService = async ({
@@ -34,7 +34,7 @@ export const createStripePaymentService = async ({
           product_data: {
             name: "Hotel Booking Payment",
           },
-          unit_amount: Math.round(amount * 100), // Stripe expects amount in cents
+          unit_amount: Math.round(amount * 100), // Stripe expects cents
         },
         quantity: 1,
       },
@@ -62,7 +62,6 @@ export const handleStripeWebhookService = async (event: Stripe.Event) => {
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
 
-    // Mark payment as complete in DB
     await db
       .update(payments)
       .set({
@@ -70,8 +69,7 @@ export const handleStripeWebhookService = async (event: Stripe.Event) => {
         paymentDate: new Date().toISOString(),
       })
       .where(eq(payments.transactionId, session.id));
-// matching by session.id
   }
 
-  // You can handle more events if needed
+  // Add more event types as needed
 };

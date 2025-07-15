@@ -15,8 +15,8 @@ import {
 
 hotelRouter.get("/hotels", getAllHotels);
 hotelRouter.get("/hotel/:id", getHotelById);
-hotelRouter.post("/hotel",adminOnly, createHotel);
-hotelRouter.put("/hotel/:id",adminOnly, updateHotel);
-hotelRouter.delete("/hotel/:id", adminOnly,deleteHotel);
+hotelRouter.post("/hotel", createHotel);
+hotelRouter.put("/hotel/:id", updateHotel);
+hotelRouter.delete("/hotel/:id", deleteHotel);
 
 

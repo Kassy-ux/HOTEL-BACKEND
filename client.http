@@ -2,13 +2,14 @@ POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
 {
-  "firstName": "hosea",
+  "firstName": "alice",
   "lastName": "join",
   "contactPhone": "0758658199",
-  "email": "hosea@gmail.com",
-  "password": "12345",
+  "email": "alice@gmail.com",
+  "password": "12345678",
   "address": "123 mailRoad",
   "role": "admin"
+  
 }
 ###
 POST http://localhost:5000/api/auth/login
@@ -36,7 +37,8 @@ Content-Type: application/json
   "address": "123 Test St",
   "contactPhone": "0712345678",
   "category": "Standard",
-  "rating": 3.5
+  "rating": 3.5,
+  "hotelImage": "https://unsplash.com/photos/a-large-swimming-pool-surrounded-by-palm-trees-_pPHgeHz1uk"
 }
 
 

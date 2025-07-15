@@ -35,7 +35,7 @@ BookingRouter.patch("/booking/:id/cancel", cancelBooking);                      
 BookingRouter.patch("/booking/:id/confirm", confirmBooking);                       // PATCH /api/bookings/:id/confirm
 
 // Query by relationships
-BookingRouter.get("/booking/user/:userId", getBookingsByUserId);                   // GET /api/bookings/user/:userId
+BookingRouter.get("/bookings/user/:userId", getBookingsByUserId);                   // GET /api/bookings/user/:userId
 BookingRouter.get("/booking/room/:roomId", getBookingsByRoomId);                   // GET /api/bookings/room/:roomId
 BookingRouter.get("/booking/:status", getBookingsByStatus);                 // GET /api/bookings/status/:status
 
