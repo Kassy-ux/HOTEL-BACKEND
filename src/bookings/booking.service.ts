@@ -438,3 +438,48 @@ export const getUpcomingCheckOutsService = async (days: number = 7) => {
     orderBy: (bookings, { asc }) => [asc(bookings.checkOutDate)]
   });
 };
+export const changeRoomService = async (bookingId: number, newRoomId: number): Promise<string> => {
+  const booking = await db.query.bookings.findFirst({
+    where: eq(bookings.bookingId, bookingId)
+  });
+
+  if (!booking) throw new Error("Booking not found");
+
+  // ✅ Ensure dates are not null
+  if (!booking.checkInDate || !booking.checkOutDate) {
+    throw new Error("Booking has missing check-in or check-out date");
+  }
+
+  const newRoom = await db.query.rooms.findFirst({
+    where: eq(rooms.roomId, newRoomId)
+  });
+
+  if (!newRoom) throw new Error("New room not found");
+
+  // ✅ Safe to use dates now
+  const isAvailable = await checkRoomAvailabilityService(
+    newRoomId,
+    booking.checkInDate,
+    booking.checkOutDate
+  );
+
+  if (!isAvailable) throw new Error("Selected room is not available for the same date range");
+
+  await db.update(bookings).set({
+    roomId: newRoomId,
+    updatedAt: new Date()
+  }).where(eq(bookings.bookingId, bookingId));
+
+  return `Room changed successfully to Room #${newRoomId} 🎉`;
+};
+export const updateBookingStatusToConfirmedService = async (
+  bookingId: number
+): Promise<TBookingsSelect | undefined> => {
+  const [updatedBooking] = await db
+    .update(bookings)
+    .set({ bookingStatus: "Confirmed" })
+    .where(eq(bookings.bookingId, bookingId))
+    .returning();
+
+  return updatedBooking;
+};

@@ -30,15 +30,16 @@ roomRouter.get("/room/:id", getRoomById);                                 // GET
 roomRouter.get("/room/:id/history", getRoomWithBookingHistory);           // GET /rooms/:id/history
 
 // POST routes
-roomRouter.post("/room",  createRoom);     // POST /rooms
+roomRouter.post("/rooms",  createRoom);     // POST /rooms
 
 // PUT routes
-roomRouter.put("/room/:id",  updateRoom); // PUT /rooms/:id
+roomRouter.put("/rooms/:id",  updateRoom); // PUT /rooms/:id
+roomRouter.get("/rooms/available", getAvailableRooms)
 
 // PATCH routes
 roomRouter.patch("/room/:id/availability", updateRoomAvailability); // PATCH /rooms/:id/availability
 
 // DELETE routes
-roomRouter.delete("/room/:id", deleteRoom);                              // DELETE /rooms/:id
+roomRouter.delete("/rooms/:id", deleteRoom);                              // DELETE /rooms/:id
 
 export default roomRouter;

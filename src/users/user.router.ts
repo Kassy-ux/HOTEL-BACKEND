@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  adminUpdateUserController,
   createUser,
   deleteUser,
   getUserById,
@@ -20,5 +21,6 @@ export const userRouter = Router();
 userRouter.get("/users",  getUsers);
 userRouter.get("/users/:id", getUserById );
 userRouter.post("/users", createUser);
-userRouter.put("/users/:id", anyAuthenticatedUser, updateUser);
+userRouter.put("/users/:id", updateUser);
+userRouter.patch("/admin/update-user", adminUpdateUserController);
 userRouter.delete("/users/:id", deleteUser);

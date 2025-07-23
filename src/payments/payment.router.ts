@@ -1,11 +1,17 @@
-import express from "express";
-import { createPayment, stripeWebhook } from "./payment.controller";
+import { Router } from "express";
+import { createPayment, deletePayment, getAllPayments, getPaymentById, createCheckoutSession,getPaymentsByUserId } from "./payment.controller";
+import { pagination } from "../middleware/pagination";
 
-const paymentRouter = express.Router();
+import { webhookHandler } from "./payment.webhook";
+const paymentRouter = Router();
 
-paymentRouter.post("/payments/create-checkout-session", createPayment);
+paymentRouter.get("/payments",pagination, getAllPayments);
+paymentRouter.get("/payments/user/:userId",getPaymentsByUserId);
+paymentRouter.get("/payments/:paymentId", getPaymentById);
+paymentRouter.post("/payments", createPayment);
+paymentRouter.delete("/payments/:paymentId", deletePayment);
+paymentRouter.post("/payments/create-checkout-session", createCheckoutSession);
+// paymentRouter.post("/payments/webhook", webhookHandler);
 
-// Stripe webhook route must receive raw body
-paymentRouter.post("/payments/webhook", express.raw({ type: "application/json" }), stripeWebhook);
 
 export default paymentRouter;

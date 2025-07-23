@@ -17,7 +17,9 @@ import {
   getUserBookingHistoryService,
   getHotelBookingsStatsService,
   getUpcomingCheckInsService,
-  getUpcomingCheckOutsService
+  getUpcomingCheckOutsService,
+  changeRoomService,
+  updateBookingStatusToConfirmedService
 } from './booking.service';
 
 // Get all bookings
@@ -427,5 +429,41 @@ export const getUpcomingCheckOuts = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     res.status(500).json({ error: error.message || "Failed to fetch upcoming check-outs" });
+  }
+};
+export const changeRoomController = async (req: Request, res: Response) => {
+  try {
+    const bookingId = Number(req.params.id);
+    const { newRoomId } = req.body;
+
+    if (!newRoomId || isNaN(bookingId)) {
+      res.status(400).json({ error: "Invalid booking or room ID" }); return
+    }
+
+    const message = await changeRoomService(bookingId, newRoomId);
+    res.status(200).json({ message });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message || "Failed to change room" });
+  }
+};
+
+export const updateBookingStatusToConfirmedController = async (req: Request, res: Response) => {
+  try {
+    const bookingId = parseInt(req.params.bookingId, 10);
+
+    if (isNaN(bookingId)) {
+      res.status(400).json({ error: "Invalid booking ID" }); return
+    }
+
+    const updatedBooking = await updateBookingStatusToConfirmedService(bookingId);
+
+    if (!updatedBooking) {
+      res.status(404).json({ message: "Booking not found" });  return
+    }
+
+    res.status(200).json({ message: "Booking status updated to Confirmed", booking: updatedBooking });
+  } catch (error) {
+    console.error("Error updating booking status:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };

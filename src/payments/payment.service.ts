@@ -1,75 +1,81 @@
-import Stripe from "stripe";
-import dotenv from "dotenv";
+import { eq, desc } from "drizzle-orm";
 import db from "../drizzle/db";
-import { payments } from "../drizzle/schema";
-import { decimalToFloat } from "../utils/helpers";
-import { eq } from "drizzle-orm";
+import { payments, bookings } from "../drizzle/schema";
+import type { TPaymentsSelect, TPaymentsInsert , TBookingsSelect } from "../drizzle/schema";
 
-dotenv.config();
+// Create new payment
+export const createHotelPaymentService = async (payment: TPaymentsInsert): Promise<TPaymentsSelect | undefined> => {
+  const [newPayment] = await db.insert(payments).values(payment).returning();
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-06-30.basil", // Use the latest stable version
-});
-
-export const createStripePaymentService = async ({
-  bookingId,
-  amount,
-  paymentMethod = "card",
-}: {
-  bookingId: number;
-  amount: number;
-  paymentMethod?: string;
-}) => {
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    payment_method_options: {
-      card: {
-        request_three_d_secure: "any",
-      },
-    },
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: "Hotel Booking Payment",
-          },
-          unit_amount: Math.round(amount * 100), // Stripe expects cents
-        },
-        quantity: 1,
-      },
-    ],
-    mode: "payment",
-    success_url: `${process.env.CLIENT_URL}/success`,
-    cancel_url: `${process.env.CLIENT_URL}/cancel`,
-    metadata: {
-      bookingId: bookingId.toString(),
-    },
-  });
-
-  await db.insert(payments).values({
-    bookingId,
-    amount: decimalToFloat(amount),
-    paymentStatus: "Pending",
-    transactionId: session.id,
-    paymentMethod,
-  });
-
-  return { url: session.url };
-};
-
-export const handleStripeWebhookService = async (event: Stripe.Event) => {
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
-
-    await db
-      .update(payments)
-      .set({
-        paymentStatus: "Completed",
-        paymentDate: new Date().toISOString(),
-      })
-      .where(eq(payments.transactionId, session.id));
+  // Optional: Update booking status if payment is completed and bookingId exists
+  if (payment.paymentStatus === "Completed" && payment.bookingId !== undefined && payment.bookingId !== null) {
+    await db.update(bookings)
+      .set({ bookingStatus: "Confirmed" }) 
+      .where(eq(bookings.bookingId, payment.bookingId));
   }
 
-  // Add more event types as needed
+  return newPayment;
 };
+
+
+// Get all payments with booking, user, and room
+export const getAllHotelPaymentsService = async (page: number, pageSize: number): Promise<TPaymentsSelect[] | null> => {
+  const list = await db.query.payments.findMany({
+    with: {
+      booking: {
+        with: {
+          user: { columns: { password: false } },
+          room: true,
+        },
+      },
+    },
+    orderBy: desc(payments.paymentId),
+    offset: (page - 1) * pageSize,
+    limit: pageSize,
+  });
+
+  return list;
+};
+
+// Get a single payment by ID
+export const getHotelPaymentByIdService = async (paymentId: number): Promise<TPaymentsSelect | undefined> => {
+  return await db.query.payments.findFirst({
+    where: eq(payments.paymentId, paymentId),
+    with: {
+      booking: {
+        with: {
+          user: { columns: { password: false } },
+          room: true,
+        },
+      },
+    },
+  });
+};
+
+// Get all payments for a given user ID
+export const getHotelPaymentsByUserIdService = async (
+  userId: number,
+  page: number,
+  pageSize: number
+): Promise<TBookingsSelect[] | null> => {
+  return await db.query.bookings.findMany({
+    where: eq(bookings.userId, userId),
+    with: {
+      payments: true,
+      user: { columns: { password: false } },
+      room: true,
+    },
+    orderBy: desc(bookings.bookingId),
+    offset: (page - 1) * pageSize,
+    limit: pageSize,
+  });
+};
+
+// Delete a payment
+export const deleteHotelPaymentService = async (paymentId: number): Promise<string> => {
+  await db.delete(payments).where(eq(payments.paymentId, paymentId));
+  return "Payment deleted successfully";
+};
+
+
+

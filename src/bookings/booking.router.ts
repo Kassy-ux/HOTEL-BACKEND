@@ -17,23 +17,25 @@ import {
   getUserBookingHistory,
   getHotelBookingsStats,
   getUpcomingCheckIns,
-  getUpcomingCheckOuts
+  getUpcomingCheckOuts,
+  changeRoomController,
+  updateBookingStatusToConfirmedController
 } from "./booking.controller";
 
 export const BookingRouter = Router();
 
 // Basic CRUD operations
-BookingRouter.get("/booking", getAllBookings);                                    // GET /api/bookings
-BookingRouter.post("/booking", createNewBooking);                                 // POST /api/bookings
+BookingRouter.get("/bookings", getAllBookings);                                    // GET /api/bookings
+BookingRouter.post("/bookings", createNewBooking);                                 // POST /api/bookings
 BookingRouter.get("/booking/:id", getBookingById);                                 // GET /api/bookings/:id
 BookingRouter.put("/booking/:id", updateBooking);                                  // PUT /api/bookings/:id
 BookingRouter.delete("/booking/:id", deleteBooking);                               // DELETE /api/bookings/:id
 
 // Status management
 BookingRouter.patch("/booking/:id/status", updateBookingStatus);                   // PATCH /api/bookings/:id/status
-BookingRouter.patch("/booking/:id/cancel", cancelBooking);                         // PATCH /api/bookings/:id/cancel
+BookingRouter.patch("/bookings/:id/cancel", cancelBooking);                         // PATCH /api/bookings/:id/cancel
 BookingRouter.patch("/booking/:id/confirm", confirmBooking);                       // PATCH /api/bookings/:id/confirm
-
+BookingRouter.put("/:bookingId/confirm", updateBookingStatusToConfirmedController);
 // Query by relationships
 BookingRouter.get("/bookings/user/:userId", getBookingsByUserId);                   // GET /api/bookings/user/:userId
 BookingRouter.get("/booking/room/:roomId", getBookingsByRoomId);                   // GET /api/bookings/room/:roomId
@@ -41,7 +43,8 @@ BookingRouter.get("/booking/:status", getBookingsByStatus);                 // G
 
 // Advanced queries
 BookingRouter.get("/booking/search/date-range", getBookingsByDateRange);           // GET /api/bookings/search/date-range?startDate=2024-01-01&endDate=2024-01-31
-BookingRouter.get("/booking/room/:id/availability", checkRoomAvailability);    // GET /api/bookings/room/:roomId/availability?checkInDate=2024-01-01&checkOutDate=2024-01-05
+BookingRouter.get("/booking/room/:id/availability", checkRoomAvailability); 
+BookingRouter.patch("/bookings/:id/change-room", changeRoomController);   // GET /api/bookings/room/:roomId/availability?checkInDate=2024-01-01&checkOutDate=2024-01-05
 
 // Detailed views
 BookingRouter.get("/booking/:id/details", getBookingWithCompleteDetails);          // GET /api/bookings/:id/details

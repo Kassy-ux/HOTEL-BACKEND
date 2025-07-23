@@ -130,3 +130,19 @@ export const deleteUser = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+export const adminUpdateUserController = async (req: Request, res: Response) => {
+  try {
+    const { userId, ...userData } = req.body;
+
+    if (!userId) {
+       res.status(400).json({ error: "User ID is required" }); return
+    }
+
+    const updatedUser = await updateUserService(userId, userData);
+
+     res.status(200).json(updatedUser); return
+  } catch (err: any) {
+    console.error("Error updating user:", err);
+     res.status(500).json({ error: "Failed to update user" }); return
+  }
+};
