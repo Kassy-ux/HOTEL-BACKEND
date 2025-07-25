@@ -66,6 +66,7 @@ export const bookings = pgTable("bookings", {
 export const payments = pgTable("payments", {
   paymentId: serial("payment_id").primaryKey(),
   bookingId: integer("booking_id").references(() => bookings.bookingId, { onDelete: "cascade" }),
+  userId: integer("user_id").references(() => users.userId, { onDelete: "cascade" }),
   amount: decimal("amount", { precision: 10, scale: 2 }),
   paymentStatus: paymentStatusEnum("payment_status").default("Pending"),
   paymentDate: date("payment_date"),

@@ -15,6 +15,13 @@
       "when": 1752134839049,
       "tag": "0001_spicy_sentry",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1753362188009,
+      "tag": "0002_luxuriant_umar",
+      "breakpoints": true
     }
   ]
 }

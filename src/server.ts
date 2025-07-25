@@ -16,8 +16,14 @@ import { webhookHandler } from './payments/payment.webhook';
 
 
 const app: Application = express();
-app.post("/api/payments/webhook", express.raw({ type: 'application/json' }), webhookHandler);
-// const cors = require('cors');
+app.post(
+  "/api/payments/webhook",
+  express.raw({ type: 'application/json' }),
+  (req, res, next) => {
+    webhookHandler(req, res).catch(next);
+  }
+);
+
 
 dotenv.config();
 // Basic Middleware

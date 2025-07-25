@@ -4,13 +4,12 @@ import db from "../drizzle/db";
 import { bookings, payments } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 
-// Stripe instance
+// Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-06-30.basil",
 });
 
 export const webhookHandler = async (req: Request, res: Response) => {
-
   const sig = req.headers["stripe-signature"];
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
@@ -19,9 +18,8 @@ export const webhookHandler = async (req: Request, res: Response) => {
   try {
     event = stripe.webhooks.constructEvent(req.body, sig!, endpointSecret);
   } catch (err: any) {
-    console.error("⚠️ Webhook signature verification failed:", err.message);
-    res.status(400).send(`Webhook Error: ${err.message}`);
-    return
+    console.error("❌ Webhook signature verification failed:", err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
   if (event.type === "checkout.session.completed") {
@@ -32,55 +30,48 @@ export const webhookHandler = async (req: Request, res: Response) => {
     const amount = session.amount_total;
 
     if (!bookingId || !transactionId || !amount) {
-      console.error("❌ Missing required metadata in Stripe session");
-      res.status(400).json({ error: "Missing required metadata" });
-      return
+      console.error("❌ Missing bookingId, amount, or transactionId");
+      return res.status(400).json({ error: "Missing Stripe metadata" });
     }
 
-    // ✅ Convert Stripe status to valid enum value
-    const stripeStatus = session.payment_status as Stripe.Checkout.Session.PaymentStatus;
-
-    // Map Stripe status → your internal status enum
+    // Convert Stripe status to internal enum
     let paymentStatus: "Pending" | "Completed" | "Failed" = "Pending";
-    
-    if (stripeStatus === "paid") {
-      paymentStatus = "Completed";
-    } else if (stripeStatus === "unpaid") {
-      paymentStatus = "Failed";
-    } else if (stripeStatus === "no_payment_required") {
-      paymentStatus = "Pending"; // or "Completed" based on your business logic
+
+    switch (session.payment_status) {
+      case "paid":
+        paymentStatus = "Completed";
+        break;
+      case "unpaid":
+        paymentStatus = "Failed";
+        break;
+      case "no_payment_required":
+        paymentStatus = "Pending";
+        break;
     }
-    
-    
 
     try {
-        // Save the payment
-       await db.insert(payments).values({
-          bookingId: parseInt(bookingId),
-          amount: (amount / 100).toFixed(2),
-          paymentStatus,
-          transactionId,
-        }).returning();
+      // Save payment to DB
+      await db.insert(payments).values({
+        bookingId: parseInt(bookingId),
+        paymentMethod: 'Card',
+        amount: (amount / 100).toFixed(2), // Convert cents to dollars
+        transactionId,
+        paymentStatus,
+      });
 
-        // change status
+      // Update booking status if payment completed
+      if (paymentStatus === "Completed") {
+        await db.update(bookings)
+          .set({ bookingStatus: "Confirmed" })
+          .where(eq(bookings.bookingId, parseInt(bookingId)));
+      }
 
-      const res =   await db
-      .update(bookings)
-      .set({ bookingStatus: "Confirmed" }) // or use a variable like { bookingStatus }
-      .where(eq(bookings.bookingId, parseInt(bookingId))) 
-      .returning()
-      
-      console.log(res)
-
-
-      console.log(`✅ Payment recorded for appointment ${bookingId}`);
-    } catch (err) {
-      console.error("❌ Failed to save payment in DB", err);
-      res.status(500).json({ error: "Database insert failed" });
-      return
+      console.log(`✅ Payment recorded for booking #${bookingId}`);
+    } catch (error) {
+      console.error("❌ Database operation failed:", error);
+      return res.status(500).json({ error: "Internal server error" });
     }
   }
 
-  res.status(200).json({ received: true });
-  return
+  return res.status(200).json({ received: true });
 };

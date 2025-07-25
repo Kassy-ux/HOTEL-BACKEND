@@ -29,7 +29,7 @@ BookingRouter.get("/bookings", getAllBookings);                                 
 BookingRouter.post("/bookings", createNewBooking);                                 // POST /api/bookings
 BookingRouter.get("/booking/:id", getBookingById);                                 // GET /api/bookings/:id
 BookingRouter.put("/booking/:id", updateBooking);                                  // PUT /api/bookings/:id
-BookingRouter.delete("/booking/:id", deleteBooking);                               // DELETE /api/bookings/:id
+BookingRouter.delete("/bookings/:id", deleteBooking);                               // DELETE /api/bookings/:id
 
 // Status management
 BookingRouter.patch("/booking/:id/status", updateBookingStatus);                   // PATCH /api/bookings/:id/status

@@ -71,10 +71,21 @@ export const getHotelPaymentsByUserIdService = async (
   });
 };
 
+
+
+
 // Delete a payment
 export const deleteHotelPaymentService = async (paymentId: number): Promise<string> => {
   await db.delete(payments).where(eq(payments.paymentId, paymentId));
   return "Payment deleted successfully";
+};
+
+// Get payments directly from payments table for a user
+export const getPaymentsOnlyByUserIdService = async (userId: number): Promise<TPaymentsSelect[]> => {
+  return await db.query.payments.findMany({
+    where: eq(payments.userId, userId), // make sure you store this!
+    orderBy: desc(payments.paymentId),
+  });
 };
 
 

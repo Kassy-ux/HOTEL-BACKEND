@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const payment_controller_1 = require("./payment.controller");
+const pagination_1 = require("../middleware/pagination");
+const paymentRouter = (0, express_1.Router)();
+paymentRouter.get("/payments", pagination_1.pagination, payment_controller_1.getAllPayments);
+paymentRouter.get("/hotel-payments/user/:userId", payment_controller_1.getPaymentsByUserId);
+paymentRouter.get("/payments/simple/:userId", payment_controller_1.getPaymentsOnlyByUserIdController);
+paymentRouter.get("/payments/:paymentId", payment_controller_1.getPaymentById);
+paymentRouter.post("/payments", payment_controller_1.createPayment);
+paymentRouter.delete("/payments/:paymentId", payment_controller_1.deletePayment);
+paymentRouter.post("/payments/create-checkout-session", payment_controller_1.createCheckoutSession);
+// paymentRouter.post("/payments/webhook", webhookHandler);
+exports.default = paymentRouter;

@@ -5,6 +5,7 @@ import {
   getHotelPaymentByIdService,
   getHotelPaymentsByUserIdService,
   deleteHotelPaymentService,
+  getPaymentsOnlyByUserIdService,
 } from "../payments/payment.service";
 
 import Stripe from "stripe";
@@ -145,3 +146,20 @@ export const deletePayment = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Failed to delete payment", error });
   }
 };
+
+
+
+
+export const  getPaymentsOnlyByUserIdController = async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.userId);
+  if (!userId)  res.status(400).json({ error: "Invalid userId" }); 
+
+  try {
+    const payments = await getPaymentsOnlyByUserIdService(userId);
+     res.json(payments);return
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch payments" });return
+  }
+};
+
