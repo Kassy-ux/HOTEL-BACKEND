@@ -21,7 +21,7 @@
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
     "@types/cors": "^2.8.19",
-    "HOTEL-BOOKING-BACKEND": "link:",
+   
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
