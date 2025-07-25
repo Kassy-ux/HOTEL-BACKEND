@@ -32,14 +32,14 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logger);
-// app.use(rateLimiterMiddleware);
+
 
 //default route
 app.get('/', (req, res:Response) => {
   res.send("Welcome to Express API Backend WIth Drizzle ORM and PostgreSQL");
 });
 
-// Enable CORS for all routes
+
 
 // Or configure specific origins
 app.use(cors({
