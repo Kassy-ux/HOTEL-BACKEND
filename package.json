@@ -1,12 +1,12 @@
 {
-  "name": "HOTEL-BOOKING-BACKEND",
+  "name": "hotel-backend-system",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch ./src/server.ts",
     "build": "tsc",
-    "start": "node ./dist/src/server.js",
+    "start": "node ./dist/server.js",
     "gen": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
     "studio": "drizzle-kit studio",
