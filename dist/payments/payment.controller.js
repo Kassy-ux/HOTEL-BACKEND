@@ -70,7 +70,8 @@ const handleStripeWebhook = async (req, res) => {
     }
     catch (err) {
         console.error('Webhook signature verification failed.', err.message);
-        return res.status(400).send(`Webhook Error: ${err.message}`);
+        res.status(400).send(`Webhook Error: ${err.message}`);
+        return;
     }
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object;

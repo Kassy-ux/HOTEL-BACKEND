@@ -15,27 +15,25 @@ const booking_router_1 = __importDefault(require("./bookings/booking.router"));
 const support_router_1 = __importDefault(require("./support_tickets/support.router"));
 const payment_router_1 = __importDefault(require("./payments/payment.router"));
 const cors_1 = __importDefault(require("cors"));
-const payment_webhook_1 = require("./payments/payment.webhook");
+const payment_controller_1 = require("./payments/payment.controller");
 const app = (0, express_1.default)();
-app.post("/api/payments/webhook", express_1.default.raw({ type: 'application/json' }), (req, res, next) => {
-    (0, payment_webhook_1.webhookHandler)(req, res).catch(next);
-});
 dotenv_1.default.config();
 // Basic Middleware
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(logger_1.logger);
+app.post('/webhook', express_1.default.raw({ type: 'application/json' }), payment_controller_1.handleStripeWebhook);
 //default route
 app.get('/', (req, res) => {
     res.send("Welcome to Express API Backend WIth Drizzle ORM and PostgreSQL");
 });
 // Or configure specific origins
-app.use((0, cors_1.default)({
-    origin: 'http://localhost:5173',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+// app.use(cors({
+//   origin: 'http://localhost:5173',
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//   allowedHeaders: ['Content-Type', 'Authorization']
+// }));
 //import route
 app.use('/api', auth_router_1.authRouter);
 app.use('/api', user_router_1.userRouter);
