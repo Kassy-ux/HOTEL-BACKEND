@@ -16,6 +16,7 @@ export const users = pgTable("users", {
   password: varchar("password", { length: 255 }).notNull(),
   contactPhone: varchar("contact_phone", { length: 20 }),
   address: varchar("address", { length: 255 }),
+  profileUrl: varchar("profile_url", { length: 500 }), 
   role: roleEnum("role").default("user"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
