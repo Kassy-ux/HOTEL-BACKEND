@@ -55,8 +55,8 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
       metadata: {
         bookingId: bookingId?.toString() || '', // ✅ Pass it correctly
       },
-      success_url: 'https://stayluxe-e76y.onrender.com/dashboard/Bookings',
-      cancel_url: 'https://stayluxe-e76y.onrender.com/payment-cancelled',
+      success_url: 'https://stayluxe.netlify.app/dashboard/Bookings',
+      cancel_url: 'https://stayluxe.netlify.app/payment-cancelled',
     });
 
     res.status(200).json({ url: session.url });
