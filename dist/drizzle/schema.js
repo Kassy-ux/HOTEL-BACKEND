@@ -16,6 +16,7 @@ exports.users = (0, pg_core_1.pgTable)("users", {
     password: (0, pg_core_1.varchar)("password", { length: 255 }).notNull(),
     contactPhone: (0, pg_core_1.varchar)("contact_phone", { length: 20 }),
     address: (0, pg_core_1.varchar)("address", { length: 255 }),
+    profileUrl: (0, pg_core_1.varchar)("profile_url", { length: 500 }),
     role: (0, exports.roleEnum)("role").default("user"),
     createdAt: (0, pg_core_1.timestamp)("created_at").defaultNow(),
     updatedAt: (0, pg_core_1.timestamp)("updated_at").defaultNow(),

@@ -29,11 +29,11 @@ app.get('/', (req, res) => {
     res.send("Welcome to Express API Backend WIth Drizzle ORM and PostgreSQL");
 });
 // Or configure specific origins
-// app.use(cors({
-//   origin: 'http://localhost:5173',
-//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//   allowedHeaders: ['Content-Type', 'Authorization']
-// }));
+app.use((0, cors_1.default)({
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 //import route
 app.use('/api', auth_router_1.authRouter);
 app.use('/api', user_router_1.userRouter);
