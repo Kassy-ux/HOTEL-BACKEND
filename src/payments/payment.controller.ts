@@ -53,7 +53,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
         },
       ],
       metadata: {
-        bookingId: bookingId?.toString() || '', // ✅ Pass it correctly
+        bookingId: bookingId?.toString() || '',
       },
       success_url: 'https://stayluxe.netlify.app/dashboard/Bookings',
       cancel_url: 'https://stayluxe.netlify.app/payment-cancelled',
@@ -72,7 +72,7 @@ export const handleStripeWebhook = async (req: Request, res: Response) => {
   let event;
 
   try {
-    const rawBody = (req as any).rawBody || req.body; // Ensure rawBody middleware or buffer
+    const rawBody = (req as any).rawBody || req.body; 
     event = stripe.webhooks.constructEvent(rawBody, sig!, process.env.STRIPE_WEBHOOK_SECRET!);
   } catch (err: any) {
     console.error('Webhook signature verification failed.', err.message);
