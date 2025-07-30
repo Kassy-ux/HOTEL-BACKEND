@@ -23,9 +23,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logger);
-app.post('/webhook',
+app.post(
+  '/api/payments/webhook',
   express.raw({ type: 'application/json' }),
-  handleStripeWebhook
+  webhookHandler
 );
 //default route
 app.get('/', (req, res:Response) => {
