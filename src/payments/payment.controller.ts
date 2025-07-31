@@ -68,19 +68,22 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
 
 // ✅ HANDLE STRIPE WEBHOOK
 export const handleStripeWebhook = async (req: Request, res: Response) => {
-  const sig = req.headers['stripe-signature'];
-  let event;
+  const sig = req.headers["stripe-signature"];
 
+  let event;
   try {
-    const rawBody = (req as any).rawBody || req.body; 
-    event = stripe.webhooks.constructEvent(rawBody, sig!, process.env.STRIPE_WEBHOOK_SECRET!);
+    // req.body is still a Buffer here because of express.raw()
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig!,
+      process.env.STRIPE_WEBHOOK_SECRET!
+    );
   } catch (err: any) {
-    console.error('Webhook signature verification failed.', err.message);
-   res.status(400).send(`Webhook Error: ${err.message}`);
-   return 
+    console.error("❌ Webhook signature verification failed:", err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  if (event.type === 'checkout.session.completed') {
+  if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
     const bookingId = session.metadata?.bookingId;
 
