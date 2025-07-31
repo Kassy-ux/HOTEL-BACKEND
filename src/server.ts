@@ -17,17 +17,18 @@ import { handleStripeWebhook } from './payments/payment.controller';
 
 
 const app = express();
+app.post(
+  '/api/payments/webhook',
+  express.raw({ type: 'application/json' }),
+  webhookHandler
+);
 dotenv.config();
 // Basic Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logger);
-app.post(
-  '/api/payments/webhook',
-  express.raw({ type: 'application/json' }),
-  webhookHandler
-);
+
 //default route
 app.get('/', (req, res:Response) => {
   res.send("Welcome to Express API Backend WIth Drizzle ORM and PostgreSQL");
